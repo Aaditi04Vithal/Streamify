@@ -37,7 +37,17 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Connect to DB for Serverless functions
+if (process.env.VERCEL) {
   connectDB();
-});
+}
+
+// Only listen if not running as a Vercel serverless function
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    connectDB();
+  });
+}
+
+export default app;
